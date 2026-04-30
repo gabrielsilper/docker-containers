@@ -1,28 +1,42 @@
 services:
-  postgres-server:
-    image: postgres
-    container_name: postgres-server
+  postgres:
+    image: postgres:16-alpine
+    container_name: jambu-contract-hub-db
+    restart: unless-stopped
     environment:
-      - POSTGRES_PASSWORD=123
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - '5432:5432'
+      - "${DB_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
-      - fullstack-indt
+      - jch-app_network
 
-  pg-admin-web:
+  pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: pg-admin-web
-    restart: always
-    depends_on:
-      - postgres-server
+    container_name: jambu-pgadmin
+    restart: unless-stopped
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
-      - '8080:80'
+      - "${PGADMIN_PORT}:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
-      - fullstack-indt
+      - jch-app_network
+
+volumes:
+  postgres_data:
 
 networks:
-  fullstack-indt:
+  jch-app_network:
     driver: bridge
