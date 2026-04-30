@@ -1,0 +1,86 @@
+{
+  "compilerOptions": {
+    // ─── AMBIENTE ──────────────────────────────────────────────────────────
+    // Define o JavaScript de saída gerado pelo compilador.
+    // ES2022 é seguro e moderno: suporta top-level await, class fields, etc.
+    // TS 6.0 deprecou ES5; o mínimo agora é ES2015.
+    "target": "ES2022",
+
+    // Quais APIs de runtime ficam disponíveis no type-check.
+    // ES2022 cobre Promise, Array methods modernos, Object.entries, etc.
+    // Se usar DOM, adicione "DOM" aqui também.
+    "lib": ["ES2022"],
+
+    // ─── MÓDULOS (ESM) ─────────────────────────────────────────────────────
+    // Como o TypeScript vai emitir os imports/exports.
+    // "es2022" gera ESM nativo — ideal para Node 18+, Deno, Bun, bundlers.
+    "module": "es2022",
+
+    // Como o TypeScript resolve os caminhos de import.
+    // "bundler" é o modo moderno recomendado para quem usa Vite, esbuild, etc.
+    // Respeita o campo "exports" do package.json corretamente.
+    // SUBSTITUI o "node" (deprecated no 6.0).
+    "moduleResolution": "bundler",
+
+    // ─── DECORATORS ────────────────────────────────────────────────────────
+    // Habilita o uso de @Decorators (NestJS, TypeORM, etc.).
+    // Ainda necessário para o modelo "legacy" de decorators.
+    "experimentalDecorators": true,
+
+    // Emite metadados de tipo nos decorators (necessário para DI containers
+    // como NestJS e inversify que usam reflect-metadata).
+    "emitDecoratorMetadata": true,
+
+    // ─── INPUT E OUTPUT ────────────────────────────────────────────────────
+    // Onde estão os arquivos fonte. Deve bater com "include".
+    "rootDir": "./src",
+
+    // Onde o compilador coloca os arquivos .js gerados.
+    "outDir": "./dist",
+
+    // ─── TYPE SAFETY ───────────────────────────────────────────────────────
+    // Ativa um conjunto de verificações rígidas de uma vez só.
+    // No TS 6.0, strict já é true por padrão — mas é bom deixar explícito.
+    // Inclui: noImplicitAny, strictNullChecks, strictFunctionTypes, etc.
+    "strict": true,
+
+    // Ignora erros de tipo dentro dos arquivos .d.ts das dependências.
+    // Essencial porque muitos pacotes têm tipos imperfeitos.
+    "skipLibCheck": true,
+
+    // Evita bugs causados por diferença de capitalização em sistemas
+    // case-insensitive (Windows/Mac) vs case-sensitive (Linux/CI).
+    "forceConsistentCasingInFileNames": true,
+
+    // ─── INTEROP ───────────────────────────────────────────────────────────
+    // Permite importar módulos CommonJS com a sintaxe ESM padrão:
+    // import fs from 'fs' em vez de import * as fs from 'fs'
+    // No TS 6.0, esModuleInterop false está DEPRECATED — mantenha true.
+    "esModuleInterop": true,
+
+    // Permite importar arquivos .json diretamente com tipagem automática.
+    // Útil para configs, traduções, fixtures, etc.
+    "resolveJsonModule": true,
+
+    // ─── QUALIDADE ─────────────────────────────────────────────────────────
+    // Já está coberto pelo "strict": true acima, mas deixar explícito
+    // serve como documentação da intenção da equipe.
+    "noImplicitAny": true,
+
+    // Garante que todo return path de uma função retorne um valor.
+    // Evita funções que retornam undefined silenciosamente.
+    "noImplicitReturns": true,
+
+    // Avisa sobre variáveis locais declaradas mas nunca usadas.
+    // Mantém o código limpo sem depender só do linter.
+    "noUnusedLocals": true,
+
+    // Mesmo para parâmetros de funções não utilizados.
+    "noUnusedParameters": true,
+
+    // Evita fallthrough acidental em blocos switch/case.
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
